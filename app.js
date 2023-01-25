@@ -10,7 +10,16 @@ const io = socketio(server);
 app.use(express.static(path.join(__dirname, 'public')))
 
 io.on('connection', socket => {
-    console.log("new web socket connection");
+    //welcome current user
+    socket.emit('message', 'Welcome to M chat');
+    // Broadcast when a user connects
+    socket.broadcast.emit('message', 'A user has joined the chat.');
+    //Runs when client disconnects
+    socket.on('disconnect', () => {
+        io.emit('message', 'A user has left the chat.');
+    })
+
+
 })
 
 const PORT = 5000 || process.env.PORT;
